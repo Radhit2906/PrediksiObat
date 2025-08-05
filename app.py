@@ -54,7 +54,6 @@ if submitted:
             'Solvent2_Molar_Volume': Solvent2_Molar_Volume,
             'x1': x1,
             'x2': x2,
-            'x3': x3,
             'Study_Temperature': Study_Temperature
         }])
 
@@ -72,3 +71,4 @@ if submitted:
         st.error("❌ Model tidak ditemukan. Pastikan file 'xgboost_for_solubility.pkl' ada.")
     except Exception as e:
         st.error(f"❌ Terjadi error saat prediksi: {e}")
+
