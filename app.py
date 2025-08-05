@@ -6,13 +6,13 @@ st.set_page_config(page_title="Prediksi Solubilitas Obat", layout="centered")
 st.title("🧪 Prediksi Solubilitas Obat dalam Campuran Pelarut")
 
 st.markdown("""
-Aplikasi ini memprediksi **fraksi mol obat (`x3`)** berdasarkan parameter fisikokimia 
+Aplikasi ini memprediksi **fraksi mol obat (solubilitas)** berdasarkan parameter fisikokimia 
 obat dan pelarut, menggunakan model machine learning (XGBoost).
 Silakan masukkan nilai-nilai parameter di bawah ini:
 """)
 
 with st.form("prediction_form"):
-    st.subheader("📥 Input Parameter")
+    st.subheader("📅 Input Parameter")
 
     Drug_Molar_Mass = st.number_input("Massa Molar Obat", value=300.0)
     Drug_Solubility_Parameter = st.number_input("Parameter Solubilitas Obat", value=20.0)
@@ -29,7 +29,6 @@ with st.form("prediction_form"):
 
     x1 = st.number_input("x1 (Fraksi Mol Solven 1)", value=0.5)
     x2 = st.number_input("x2 (Fraksi Mol Solven 2)", value=0.5)
-    x3 = st.number_input("x3 (Fraksi Mol Obat)", value=0.0)
     Study_Temperature = st.number_input("Temperatur Studi", value=298.15)
 
     submitted = st.form_submit_button("🔮 Prediksi")
@@ -39,7 +38,7 @@ if submitted:
         # Load model
         model = joblib.load("xgboost_for_solubility.pkl")
 
-        # Buat DataFrame dari input
+        # Buat DataFrame dari input (tanpa x3)
         input_data = pd.DataFrame([{
             'Drug_Molar_Mass': Drug_Molar_Mass,
             'Drug_Solubility_Parameter': Drug_Solubility_Parameter,
@@ -59,11 +58,9 @@ if submitted:
 
         prediction = model.predict(input_data)[0]
 
-        # Tampilkan ringkasan input
-        st.subheader("📋 Ringkasan Input:")
+        st.subheader("📊 Ringkasan Input:")
         st.dataframe(input_data)
 
-        # Tampilkan hasil prediksi
         st.subheader("🔎 Hasil Prediksi:")
         st.metric(label="Prediksi Solubilitas (x3)", value=f"{prediction:.6f}")
 
@@ -71,4 +68,3 @@ if submitted:
         st.error("❌ Model tidak ditemukan. Pastikan file 'xgboost_for_solubility.pkl' ada.")
     except Exception as e:
         st.error(f"❌ Terjadi error saat prediksi: {e}")
-
